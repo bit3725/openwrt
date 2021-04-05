@@ -60,16 +60,15 @@ jobs:
           mkdir openwrt-packages
           cd openwrt-packages
           # add OpenClash
-          git clone --branch master https://github.com/vernesong/OpenClash
-          mv OpenClash/luci-app-openclash/ .
-          rm -rf OpenClash/
-          mkdir -p ../base-files/files/etc/clash
-          wget -qO- https://github.com/Dreamacro/clash/releases/download/v0.20.0/clash-linux-amd64-v0.20.0.gz | gunzip -c > ../base-files/files/etc/clash/clash
-          chmod +x ../base-files/files/etc/clash/clash
+          svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           mkdir -p ../base-files/files/etc/openclash/core
-          cp ../base-files/files/etc/clash/clash ../base-files/files/etc/openclash/core/
-          mkdir -p ../base-files/files/usr/share/clash
-          echo 0.20.0 > ../base-files/files/usr/share/clash/core_version
+          # for updates, go to: https://github.com/Dreamacro/clash/releases
+          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.4.2/clash-linux-armv8-v1.4.2.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash
+          # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN-Premium
+          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-armv8-2021.03.10.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash_tun
+          # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
+          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-armv8.tar.gz | tar xOvz > ../base-files/files/etc/openclash/core/clash_game
+          chmod +x ../base-files/files/etc/openclash/core/clash*
           # add argon theme
           rm -rf ../lean/luci-theme-argon
           git clone https://github.com/jerrykuku/luci-theme-argon.git
@@ -91,6 +90,11 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          
+      - name: Install Mods
+        run: |
+          rm -rf feeds/packages/libs/libcap
+          svn co https://github.com/openwrt/packages/trunk/libs/libcap feeds/packages/libs/libcap
 
       - name: Costom configure file
         run: |
@@ -185,6 +189,9 @@ jobs:
           # CONFIG_PACKAGE_kmod-usb2-pci=y
           # CONFIG_PACKAGE_kmod-usb3=y
           # EOF
+          
+          # Kmod
+          CONFIG_PACKAGE_kmod-tun=y
           
           # Language support
           cat >> .config <<EOF
