@@ -213,7 +213,9 @@ jobs:
           # EOF
           
           # Kmod
+          cat >> .config <<EOF
           CONFIG_PACKAGE_kmod-tun=y
+          EOF
           
           # Language support
           cat >> .config <<EOF
