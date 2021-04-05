@@ -59,6 +59,7 @@ jobs:
           cd package
           mkdir openwrt-packages
           cd openwrt-packages
+          
           # add OpenClash
           svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           mkdir -p ../base-files/files/etc/openclash/core
@@ -69,22 +70,43 @@ jobs:
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
           wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-armv8.tar.gz | tar xOvz > ../base-files/files/etc/openclash/core/clash_game
           chmod +x ../base-files/files/etc/openclash/core/clash*
+          
           # add argon theme
           rm -rf ../lean/luci-theme-argon
           git clone https://github.com/jerrykuku/luci-theme-argon.git
+          
           # add luci-app-omcproxy
           git clone https://github.com/riverscn/luci-app-omcproxy
+          
           # add Smartdns & luci-app-smartdns
-          git clone https://github.com/pymumu/smartdns.git
-          mv smartdns smartdns1
-          mv smartdns1/package/openwrt .
-          mv openwrt smartdns
-          rm -rf smartdns1
+          svn co https://github.com/pymumu/smartdns/trunk/package/openwrt smartdns
           git clone --branch lede https://github.com/pymumu/luci-app-smartdns
+          
+          # add luci-app-jd-dailybonus
+          git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
+          
+          # add luci-app-dockerman
+          svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
+          
+          # add vssr
+          git clone https://github.com/jerrykuku/lua-maxminddb.git
+          git clone https://github.com/jerrykuku/luci-app-vssr.git
+          
+          # add openwrt-passwall
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/luci-app-passwall
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/tcping
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/ssocks
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/trojan-plus
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/trojan-go
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/naiveproxy
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/brook
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/chinadns-ng
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/xray-core
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/xray-plugin
+          
           # git clone https://github.com/openwrt-develop/luci-theme-atmaterial.git
           # git clone https://github.com/KFERMercer/luci-app-serverchan
           # git clone https://github.com/rosywrt/luci-theme-rosy
-          # git clone https://github.com/Ameykyl/luci-app-koolproxyR
 
       - name: Update feeds
         run: |
@@ -228,12 +250,15 @@ jobs:
           CONFIG_PACKAGE_luci-app-autoreboot-zh-cn=y
           CONFIG_PACKAGE_luci-app-ddns=y
           CONFIG_PACKAGE_luci-app-diskman=y
+          CONFIG_PACKAGE_luci-app-dockerman=y
+          CONFIG_PACKAGE_luci-i18n-dockerman-zh-cn=y
           CONFIG_PACKAGE_luci-app-filetransfer=y
           CONFIG_PACKAGE_luci-app-firewall=y
           CONFIG_PACKAGE_luci-app-flowoffload=y
           CONFIG_PACKAGE_luci-app-frpc=y
           CONFIG_PACKAGE_luci-app-frps=y
           CONFIG_PACKAGE_luci-app-ipsec-vpnd=y
+          CONFIG_PACKAGE_luci-app-jd-dailybonus=y
           CONFIG_PACKAGE_luci-app-mwan3=y
           CONFIG_PACKAGE_luci-app-mwan3helper=y
           CONFIG_PACKAGE_luci-i18n-mwan3helper-zh-cn=y
@@ -247,17 +272,32 @@ jobs:
           #CONFIG_PACKAGE_luci-app-oaf=y
           CONFIG_PACKAGE_luci-app-openclash=y
           CONFIG_PACKAGE_luci-app-omcproxy=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Server=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Server=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_GO=y
+          # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Brook is not set
+          # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy is not set
+          # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_kcptun is not set
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_haproxy=y
+          # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ChinaDNS_NG is not set
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_dns2socks=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_v2ray-plugin=y
+          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_simple-obfs=y
           CONFIG_PACKAGE_luci-app-qos=y
           CONFIG_PACKAGE_luci-app-ramfree=y
           CONFIG_PACKAGE_luci-app-smartdns=y
-          CONFIG_PACKAGE_luci-app-ssr-plus=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_obfs=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray_plugin=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Redsocks2=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_DNS2SOCKS=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_obfs=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray_plugin=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Redsocks2=y
+          #CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_DNS2SOCKS=y
           CONFIG_PACKAGE_luci-app-statistics=y
           CONFIG_PACKAGE_luci-app-ttyd=y
           CONFIG_PACKAGE_luci-app-udpxy=y
@@ -275,6 +315,12 @@ jobs:
           CONFIG_PACKAGE_luci-app-wol=y
           CONFIG_PACKAGE_luci-app-wrtbwmon=y
           CONFIG_PACKAGE_luci-i18n-wrtbwmon-zh-cn=y
+          CONFIG_PACKAGE_luci-app-vssr=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Xray=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Trojan=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Kcptun=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_Xray_plugin=y
+          CONFIG_PACKAGE_luci-app-vssr_INCLUDE_ShadowsocksR_Server=y
           CONFIG_PACKAGE_ddns-scripts=y
           CONFIG_PACKAGE_ddns-scripts_aliyun=y
           CONFIG_PACKAGE_ddns-scripts_cloudflare.com-v4=m
