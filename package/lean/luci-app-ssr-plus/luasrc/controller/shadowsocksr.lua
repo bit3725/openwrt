@@ -1,6 +1,8 @@
 -- Copyright (C) 2017 yushi studio <ywb94@qq.com>
 -- Licensed to the public under the GNU General Public License v3.
+
 module("luci.controller.shadowsocksr", package.seeall)
+
 function index()
 	if not nixio.fs.access("/etc/config/shadowsocksr") then
 		return
@@ -20,17 +22,20 @@ function index()
 	entry({"admin", "services", "shadowsocksr","run"},call("act_status")).leaf = true
 	entry({"admin", "services", "shadowsocksr", "ping"}, call("act_ping")).leaf = true
 end
+
 function subscribe()
 	luci.sys.call("/usr/bin/lua /usr/share/shadowsocksr/subscribe.lua >> /tmp/ssrplus.log 2>&1")
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({ret = 1})
 end
+
 function act_status()
 	local e = {}
 	e.running = luci.sys.call("busybox ps -w | grep ssr-retcp | grep -v grep >/dev/null") == 0
 	luci.http.prepare_content("application/json")
 	luci.http.write_json(e)
 end
+
 function act_ping()
 	local e = {}
 	local domain = luci.http.formvalue("domain")
@@ -44,7 +49,7 @@ function act_ping()
 	socket:close()
 	e.ping = luci.sys.exec("ping -c 1 -W 1 %q 2>&1 | grep -o 'time=[0-9]*.[0-9]' | awk -F '=' '{print$2}'" % domain)
 	if (e.ping == "") then
-		e.ping = luci.sys.exec(string.format("echo -n $(tcpping -c 1 -i 1 -p %s %s 2>&1 | grep -o 'ttl=[0-9]* time=[0-9]*.[0-9]' | awk -F '=' '{print$3}') 2>/dev/null",port, domain))
+		e.ping = luci.sys.exec(string.format("echo -n $(tcping -q -c 1 -i 1 -t 2 -p %s %s 2>&1 | grep -o 'time=[0-9]*' | awk -F '=' '{print $2}') 2>/dev/null",port, domain))
 	end
 	if (iret == 0) then
 		luci.sys.call(" ipset del ss_spec_wan_ac " .. domain)
@@ -52,6 +57,7 @@ function act_ping()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json(e)
 end
+
 function check_status()
 	local set = "/usr/bin/ssr-check www." .. luci.http.formvalue("set") .. ".com 80 3 1"
 	sret = luci.sys.call(set)
@@ -63,6 +69,7 @@ function check_status()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({ret = retstring})
 end
+
 function refresh_data()
 	local set = luci.http.formvalue("set")
 	local uci = luci.model.uci.cursor()
@@ -90,7 +97,7 @@ function refresh_data()
 				if file2 then luci.sys.exec("cp -f /tmp/ssr-update." .. type .. " " .. file2) end
 				retstring = tostring(tonumber(icount)/Num)
 				if type == "gfw_data" or type == "ad_data" then
-					luci.sys.exec("/usr/share/shadowsocksr/gfw2ipset.sh gfw_data")
+					luci.sys.exec("/usr/share/shadowsocksr/gfw2ipset.sh")
 				else
 					luci.sys.exec("/etc/init.d/shadowsocksr restart &")
 				end
@@ -115,6 +122,7 @@ function refresh_data()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({ret = retstring,retcount = icount})
 end
+
 function check_port()
 	local set = ""
 	local retstring = "<br /><br />"

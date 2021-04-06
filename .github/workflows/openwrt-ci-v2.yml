@@ -1,11 +1,11 @@
 #
 # This is free software, lisence use MIT.
-# 
+#
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
-# 
+#
 # <https://github.com/KFERMercer/OpenWrt-CI>
-# 
+#
 
 name: OpenWrt-1907 x86_64
 
@@ -13,7 +13,7 @@ on:
   # schedule:
   #   - cron: 30 1 * * 3,6
   push:
-    branches: 
+    branches:
       - master
 
 jobs:
@@ -58,7 +58,7 @@ jobs:
           cd package
           mkdir openwrt-packages
           cd openwrt-packages
-          
+
           # add OpenClash
           svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           mkdir -p ../base-files/files/etc/openclash/core
@@ -69,28 +69,28 @@ jobs:
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
           wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-amd64.tar.gz | tar xOvz > ../base-files/files/etc/openclash/core/clash_game
           chmod +x ../base-files/files/etc/openclash/core/clash*
-          
+
           # add argon theme
           rm -rf ../lean/luci-theme-argon
           git clone https://github.com/jerrykuku/luci-theme-argon.git
-          
+
           # add luci-app-omcproxy
           git clone https://github.com/riverscn/luci-app-omcproxy
-          
+
           # add Smartdns & luci-app-smartdns
           svn co https://github.com/pymumu/smartdns/trunk/package/openwrt smartdns
           git clone --branch lede https://github.com/pymumu/luci-app-smartdns
-          
+
           # add luci-app-jd-dailybonus
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
-          
+
           # add luci-app-dockerman
           #svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
-          
+
           # add vssr
           git clone https://github.com/jerrykuku/lua-maxminddb.git
           git clone https://github.com/jerrykuku/luci-app-vssr.git
-          
+
           # add openwrt-passwall
           svn co https://github.com/xiaorouji/openwrt-passwall/trunk/luci-app-passwall
           svn co https://github.com/xiaorouji/openwrt-passwall/trunk/tcping
@@ -102,7 +102,7 @@ jobs:
           svn co https://github.com/xiaorouji/openwrt-passwall/trunk/chinadns-ng
           svn co https://github.com/xiaorouji/openwrt-passwall/trunk/xray-core
           svn co https://github.com/xiaorouji/openwrt-passwall/trunk/xray-plugin
-          
+
           # git clone https://github.com/openwrt-develop/luci-theme-atmaterial.git
           # git clone https://github.com/KFERMercer/luci-app-serverchan
           # git clone https://github.com/rosywrt/luci-theme-rosy
@@ -111,7 +111,7 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          
+
       - name: Install Mods
         run: |
           rm -rf feeds/packages/libs/libcap
@@ -124,18 +124,18 @@ jobs:
 
           #
           # ========================固件定制部分========================
-          # 
+          #
 
-          # 
-          # 如果不对本区块做出任何编辑, 则生成默认配置固件. 
-          # 
+          #
+          # 如果不对本区块做出任何编辑, 则生成默认配置固件.
+          #
 
           # 以下为定制化固件选项和说明:
           #
 
           #
           # 有些插件/选项是默认开启的, 如果想要关闭, 请参照以下示例进行编写:
-          # 
+          #
           #          =========================================
           #         |  # 取消编译VMware镜像:                   |
           #         |  cat >> .config <<EOF                   |
@@ -144,16 +144,16 @@ jobs:
           #          =========================================
           #
 
-          # 
+          #
           # 以下是一些提前准备好的一些插件选项.
           # 直接取消注释相应代码块即可应用. 不要取消注释代码块上的汉字说明.
           # 如果不需要代码块里的某一项配置, 只需要删除相应行.
           #
           # 如果需要其他插件, 请按照示例自行添加.
           # 注意, 只需添加依赖链顶端的包. 如果你需要插件 A, 同时 A 依赖 B, 即只需要添加 A.
-          # 
+          #
           # 无论你想要对固件进行怎样的定制, 都需要且只需要修改 EOF 回环内的内容.
-          # 
+          #
 
           # 编译x64固件:
           cat >> .config <<EOF
@@ -210,29 +210,29 @@ jobs:
           # CONFIG_PACKAGE_kmod-usb2-pci=y
           # CONFIG_PACKAGE_kmod-usb3=y
           # EOF
-          
+
           # Kmod
           cat >> .config <<EOF
           CONFIG_PACKAGE_kmod-tun=y
           EOF
-          
+
           # Language support
           cat >> .config <<EOF
           CONFIG_LUCI_LANG_en=y
           CONFIG_LUCI_LANG_zh_Hans=y
           EOF
-          
+
           # 启用dnsmasq-full 替换 dnsmasq
           cat >> .config <<EOF
           # CONFIG_PACKAGE_dnsmasq is not set
           CONFIG_PACKAGE_dnsmasq-full=y
           EOF
-          
-          # 启用 fullcone nat 
+
+          # 启用 fullcone nat
           cat >> .config <<EOF
           CONFIG_PACKAGE_iptables-mod-fullconenat=y
           EOF
-          
+
           # 启用 strongswan
           cat >> .config <<EOF
           CONFIG_PACKAGE_strongswan=y
@@ -361,9 +361,9 @@ jobs:
           CONFIG_VMDK_IMAGES=y
           EOF
 
-          # 
+          #
           # ========================固件定制部分结束========================
-          # 
+          #
 
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
