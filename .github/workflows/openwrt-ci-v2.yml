@@ -83,6 +83,9 @@ jobs:
 
           # add luci-app-jd-dailybonus
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
+          
+          # add adguardhome
+          git clone https://github.com/rufengsuixing/luci-app-adguardhome
 
           # add luci-app-dockerman
           #svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman
@@ -249,6 +252,8 @@ jobs:
           CONFIG_PACKAGE_luci-lib-ipkg=y
           CONFIG_PACKAGE_luci-app-accesscontrol=y
           CONFIG_PACKAGE_luci-i18n-accesscontrol-zh-cn=y
+          CONFIG_PACKAGE_luci-app-adguardhome=y
+          CONFIG_PACKAGE_luci-app-adguardhome-zh-cn=y
           CONFIG_PACKAGE_luci-app-arpbind=y
           CONFIG_PACKAGE_luci-app-arpbind-zh-cn=y
           CONFIG_PACKAGE_luci-app-autoreboot=y
