@@ -63,9 +63,9 @@ jobs:
           svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           mkdir -p ../base-files/files/etc/openclash/core
           # for updates, go to: https://github.com/Dreamacro/clash/releases
-          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.4.2/clash-linux-amd64-v1.4.2.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash
+          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.5.0/clash-linux-amd64-v1.5.0.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN-Premium
-          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-amd64-2021.03.10.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash_tun
+          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-amd64-2021.04.08.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash_tun
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
           wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-amd64.tar.gz | tar xOvz > ../base-files/files/etc/openclash/core/clash_game
           chmod +x ../base-files/files/etc/openclash/core/clash*
