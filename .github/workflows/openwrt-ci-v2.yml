@@ -348,6 +348,11 @@ jobs:
           CONFIG_PACKAGE_luci-theme-material=y
           #CONFIG_PACKAGE_luci-theme-rosy=y
           EOF
+          
+          # luci-mode-rpc for home assistant
+          cat >> .config <<EOF
+          CONFIG_PACKAGE_luci-mod-rpc=y
+          EOF
 
           # 常用软件包:
           cat >> .config <<EOF
