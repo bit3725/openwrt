@@ -63,9 +63,9 @@ jobs:
           svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           mkdir -p ../base-files/files/etc/openclash/core
           # for updates, go to: https://github.com/Dreamacro/clash/releases
-          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.5.0/clash-linux-amd64-v1.5.0.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash
+          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.6.0/clash-linux-amd64-v1.6.0.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN-Premium
-          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-amd64-2021.04.08.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash_tun
+          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-amd64-2021.05.08.gz | gunzip -c > ../base-files/files/etc/openclash/core/clash_tun
           # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
           wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-amd64.tar.gz | tar xOvz > ../base-files/files/etc/openclash/core/clash_game
           chmod +x ../base-files/files/etc/openclash/core/clash*
@@ -173,14 +173,16 @@ jobs:
           cat >> .config <<EOF
           # CONFIG_TARGET_ROOTFS_TARGZ is not set
           # CONFIG_TARGET_ROOTFS_INITRAMFS is not set
-          # CONFIG_TARGET_ROOTFS_SQUASHFS is not set
-          CONFIG_TARGET_ROOTFS_EXT4FS is not set
+          CONFIG_TARGET_ROOTFS_SQUASHFS
+          CONFIG_TARGET_ROOTFS_EXT4FS
           EOF
 
           # 设置固件大小:
           cat >> .config <<EOF
           CONFIG_TARGET_KERNEL_PARTSIZE=16
           CONFIG_TARGET_ROOTFS_PARTSIZE=512
+          CONFIG_TARGET_EXT4_BLOCKSIZE=4096
+          CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=512
           EOF
 
           # 固件压缩:
